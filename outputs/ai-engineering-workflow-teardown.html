@@ -1,0 +1,1708 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Engineering Workflow Teardown</title>
+  <meta name="description" content="Request one of 10 private Agentic Engineering Workflow Teardown sessions.">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #050505;
+      --muted: #575d63;
+      --paper: rgba(255, 255, 255, 0.78);
+      --paper-strong: rgba(255, 255, 255, 0.9);
+      --line: #050505;
+      --soft-line: rgba(5, 5, 5, 0.16);
+      --wash: #23a4b5;
+      --focus: rgba(0, 125, 140, 0.26);
+      --shadow: 10px 10px 0 #050505;
+      --max: 1360px;
+      --radius: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      overflow-x: hidden;
+      scroll-behavior: auto;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.58) 42%, rgba(255,255,255,0.1) 100%),
+        url("assets/teardown-background.png");
+      background-color: #f5fbfb;
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-size: cover, 100% 100%;
+      background-attachment: scroll, scroll;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      overflow: visible;
+    }
+
+    .wrap {
+      width: min(var(--max), calc(100% - clamp(32px, 5vw, 84px)));
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 58px;
+      padding: 14px 0 6px;
+    }
+
+    .brand {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--ink);
+      font-size: 19px;
+      font-weight: 950;
+      line-height: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: block;
+      width: 31px;
+      height: 31px;
+      object-fit: contain;
+    }
+
+    .brand-word {
+      padding-top: 2px;
+    }
+
+    .screen {
+      display: none;
+      min-height: calc(100svh - 78px);
+      overflow: visible;
+      padding: clamp(24px, 4vh, 50px) 0 clamp(36px, 6vh, 70px);
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .screen[data-screen="home"] {
+      padding-top: clamp(18px, 3.2vh, 38px);
+    }
+
+    .home {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      align-content: start;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1,
+    h2 {
+      font-family: Impact, Haettenschweiler, "Arial Black", Inter, ui-sans-serif, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 930px;
+      margin-bottom: clamp(14px, 2vh, 22px);
+      font-size: clamp(64px, 8.6vw, 116px);
+      line-height: 0.89;
+    }
+
+    .signal-line {
+      width: min(100%, 1080px);
+      height: 12px;
+      margin: 0 0 clamp(16px, 2.4vh, 24px);
+      border: 3px solid var(--ink);
+      background: linear-gradient(90deg, #ef7c22 0%, #ec536e 18%, #ffd34d 42%, #47b56f 67%, #2397a4 100%);
+      box-shadow: inset 0 1px rgba(255,255,255,0.75);
+    }
+
+    .lead {
+      max-width: 880px;
+      margin-bottom: clamp(20px, 3vh, 28px);
+      color: var(--ink);
+      font-size: clamp(20px, 2vw, 28px);
+      font-weight: 850;
+      line-height: 1.2;
+    }
+
+    .value-grid {
+      display: grid;
+      width: min(100%, 1080px);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin-bottom: clamp(22px, 3.2vh, 30px);
+    }
+
+    .value-card {
+      min-height: 172px;
+      border: 3px solid var(--line);
+      background: var(--paper);
+      padding: 22px 22px 20px;
+    }
+
+    .value-card svg {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 12px;
+    }
+
+    .value-card h3 {
+      margin-bottom: 8px;
+      font-size: 22px;
+      font-weight: 950;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .value-card p {
+      margin: 0;
+      color: #141414;
+      font-size: 17px;
+      font-weight: 650;
+      line-height: 1.33;
+    }
+
+    .button {
+      display: inline-flex;
+      min-width: 270px;
+      min-height: 70px;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border: 3px solid var(--ink);
+      border-radius: var(--radius);
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: 0;
+      line-height: 1;
+      padding: 20px 28px;
+      text-decoration: none;
+      text-transform: uppercase;
+      box-shadow: 7px 7px 0 #050505;
+      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+
+    .button:hover {
+      background: #171717;
+      transform: translate(-1px, -1px);
+      box-shadow: 8px 8px 0 #050505;
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--ink);
+      box-shadow: 5px 5px 0 #050505;
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .button svg {
+      width: 23px;
+      height: 23px;
+      flex: 0 0 auto;
+    }
+
+    .microcopy {
+      margin: 18px 0 0;
+      color: #4b4b4b;
+      font-size: 16px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .wizard {
+      display: grid;
+      gap: clamp(22px, 3vh, 34px);
+      padding-top: 0;
+    }
+
+    .progress {
+      display: grid;
+      gap: 12px;
+      width: min(100%, 1040px);
+      margin: 0 auto;
+    }
+
+    .progress-numbers {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      align-items: center;
+      gap: 14px;
+    }
+
+    .progress-step {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      color: #4a4a4a;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .progress-step span {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      background: rgba(255,255,255,0.68);
+      font-size: 24px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .progress-step.done span,
+    .progress-step.active span {
+      background: #000;
+      color: #fff;
+    }
+
+    .progress-track {
+      height: 13px;
+      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.72);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ef7c22 0%, #ec536e 22%, #ffd34d 48%, #47b56f 74%, #2397a4 100%);
+      transition: width 220ms ease;
+    }
+
+    .panel {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+      border: 3px solid var(--ink);
+      background: var(--paper-strong);
+      min-height: clamp(450px, 52svh, 580px);
+      display: grid;
+      align-content: center;
+      gap: clamp(22px, 3vh, 30px);
+      padding: clamp(28px, 4vh, 44px) clamp(42px, 6vw, 72px);
+      box-shadow: var(--shadow);
+    }
+
+    .panel.wide {
+      width: min(100%, 1320px);
+      min-height: clamp(500px, 58svh, 650px);
+    }
+
+    .panel[data-step="0"] {
+      min-height: clamp(470px, 54svh, 600px);
+    }
+
+    .panel[data-step="1"] {
+      min-height: clamp(500px, 56svh, 620px);
+    }
+
+    .panel[data-step="2"],
+    .panel[data-step="3"],
+    .panel[data-step="4"],
+    .panel[data-step="5"] {
+      min-height: clamp(520px, 58svh, 660px);
+    }
+
+    .panel[data-step="4"],
+    .panel[data-step="5"] {
+      align-content: start;
+      gap: clamp(18px, 2.5vh, 24px);
+      min-height: clamp(500px, 56svh, 620px);
+    }
+
+    .panel[data-step="4"] h2,
+    .panel[data-step="5"] h2 {
+      font-size: clamp(42px, 4.7vw, 60px);
+    }
+
+    .panel[data-step="4"] .field-grid {
+      gap: 18px;
+    }
+
+    .panel[data-step="4"] .field {
+      gap: 10px;
+    }
+
+    .panel[data-step="4"] .option-grid {
+      gap: 14px;
+    }
+
+    .panel[data-step="5"] {
+      gap: 16px;
+      padding-block: clamp(18px, 2.4vh, 26px);
+    }
+
+    .panel[data-step="5"] h2 {
+      font-size: clamp(40px, 4.4vw, 56px);
+    }
+
+    .panel > .field-grid,
+    .panel > .slider-stack,
+    .panel > .split-layout,
+    .panel > .summary-grid {
+      width: 100%;
+    }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: clamp(44px, 5vw, 64px);
+      line-height: 0.98;
+      text-align: center;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px 30px;
+    }
+
+    .field {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label,
+    .field-label {
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 950;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 60px;
+      border: 3px solid var(--ink);
+      border-radius: 0;
+      background: rgba(255,255,255,0.78);
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 700;
+      padding: 16px 22px;
+      box-shadow: none;
+    }
+
+    input::placeholder {
+      color: #747474;
+      font-weight: 600;
+    }
+
+    input:focus-visible,
+    select:focus-visible,
+    button:focus-visible,
+    .choice input:focus-visible + span,
+    .check-choice input:focus-visible + span {
+      outline: 4px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .option-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .option-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel[data-step="2"] .check-choice span {
+      min-height: 118px;
+    }
+
+    .panel[data-step="3"] .check-choice span,
+    .panel[data-step="4"] .choice span {
+      min-height: 124px;
+    }
+
+    .panel[data-step="4"] .choice span {
+      min-height: 104px;
+      padding: 14px 16px;
+    }
+
+    .panel[data-step="4"] .choice b {
+      font-size: 19px;
+    }
+
+    .panel[data-step="4"] .choice small {
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .choice,
+    .check-choice {
+      position: relative;
+      display: block;
+    }
+
+    .choice input,
+    .check-choice input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .choice span,
+    .check-choice span {
+      position: relative;
+      display: grid;
+      min-height: 110px;
+      align-content: center;
+      justify-items: center;
+      gap: 12px;
+      border: 3px solid var(--ink);
+      background-color: rgba(255,255,255,0.66);
+      color: var(--ink);
+      padding: 18px 16px;
+      text-align: center;
+      transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+      pointer-events: none;
+    }
+
+    .choice svg,
+    .check-choice svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .choice b,
+    .check-choice b {
+      font-size: 21px;
+      font-weight: 950;
+      line-height: 1.08;
+    }
+
+    .choice small,
+    .check-choice small {
+      color: inherit;
+      max-width: 28ch;
+      font-size: 15px;
+      font-weight: 650;
+      line-height: 1.25;
+    }
+
+    .choice input:checked + span,
+    .check-choice input:checked + span,
+    .choice.is-selected span,
+    .check-choice.is-selected span {
+      background-color: #050505 !important;
+      color: #fff !important;
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 #050505;
+    }
+
+    .choice input:checked + span::after,
+    .check-choice input:checked + span::after,
+    .choice.is-selected span::after,
+    .check-choice.is-selected span::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #fff;
+    }
+
+    .choice input:checked + span::before,
+    .check-choice input:checked + span::before,
+    .choice.is-selected span::before,
+    .check-choice.is-selected span::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      right: 14px;
+      width: 9px;
+      height: 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg);
+      z-index: 1;
+    }
+
+    .slider-stack {
+      display: grid;
+      gap: clamp(24px, 3.5vh, 34px);
+    }
+
+    .slider-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .slider-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .slider-value {
+      white-space: nowrap;
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    input[type="range"] {
+      height: 28px;
+      min-height: 28px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      accent-color: #000;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 15px;
+      border: 3px solid var(--ink);
+      background: linear-gradient(90deg, #000 var(--value, 0%), rgba(255,255,255,0.82) var(--value, 0%));
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 24px;
+      height: 30px;
+      margin-top: -9px;
+      border: 3px solid var(--ink);
+      border-radius: 0;
+      background:
+        linear-gradient(135deg, rgba(239,124,34,0.9), rgba(236,83,110,0.9) 36%, rgba(71,181,111,0.9) 70%, rgba(35,151,164,0.9));
+      -webkit-appearance: none;
+      appearance: none;
+      box-shadow: 4px 4px 0 #050505;
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 15px;
+      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.82);
+    }
+
+    input[type="range"]::-moz-range-progress {
+      height: 15px;
+      background: #000;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 30px;
+      border: 3px solid var(--ink);
+      border-radius: 0;
+      background: #23a4b5;
+      box-shadow: 4px 4px 0 #050505;
+    }
+
+    .range-scale {
+      display: flex;
+      justify-content: space-between;
+      color: #525252;
+      font-size: 16px;
+      font-weight: 950;
+    }
+
+    .split-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .summary-card,
+    .next-card {
+      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.68);
+      padding: 22px 24px;
+    }
+
+    .summary-card h3,
+    .next-card h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+    }
+
+    .summary-list div {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 14px;
+      border-top: 1px solid var(--soft-line);
+      padding-top: 9px;
+      color: #171717;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .summary-list dt {
+      color: #3d3d3d;
+      font-weight: 950;
+    }
+
+    .summary-list dd {
+      margin: 0;
+      text-align: right;
+    }
+
+    .fit-score {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .fit-bar {
+      height: 20px;
+      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.72);
+    }
+
+    .fit-fill {
+      width: 62%;
+      height: 100%;
+      background: #000;
+    }
+
+    .next-card {
+      min-height: 100%;
+    }
+
+    .next-card p {
+      margin-bottom: 12px;
+      color: #1b1b1b;
+      font-size: 18px;
+      font-weight: 750;
+    }
+
+    .next-card strong {
+      display: block;
+      margin-top: 22px;
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .panel[data-step="5"] .summary-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel[data-step="5"] .next-card {
+      grid-column: 1 / -1;
+      min-height: auto;
+    }
+
+    .panel[data-step="5"] .summary-card,
+    .panel[data-step="5"] .next-card {
+      padding: 13px 16px;
+    }
+
+    .panel[data-step="5"] .summary-card h3,
+    .panel[data-step="5"] .next-card h3 {
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .panel[data-step="5"] .summary-list {
+      gap: 6px;
+    }
+
+    .panel[data-step="5"] .summary-list div {
+      padding-top: 5px;
+      font-size: 13px;
+    }
+
+    .panel[data-step="5"] .fit-score {
+      margin-top: 10px;
+    }
+
+    .panel[data-step="5"] .next-card p {
+      margin-bottom: 8px;
+      font-size: 15px;
+      line-height: 1.22;
+    }
+
+    .panel[data-step="5"] .next-card strong {
+      margin-top: 8px;
+      font-size: 17px;
+    }
+
+    .nav-row {
+      display: flex;
+      width: min(100%, 1180px);
+      margin: 0 auto;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .nav-row .button {
+      min-width: 240px;
+    }
+
+    .error {
+      display: none;
+      width: min(100%, 1180px);
+      margin: -12px auto 0;
+      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.86);
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 850;
+      padding: 12px 14px;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    .success {
+      display: none;
+      width: min(100%, 760px);
+      margin: 0 auto;
+      border: 3px solid var(--ink);
+      background: rgba(255,255,255,0.9);
+      padding: 42px 38px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .success.show {
+      display: block;
+    }
+
+    .success h2 {
+      margin-bottom: 16px;
+    }
+
+    .success p {
+      margin: 0;
+      color: #202020;
+      font-size: 20px;
+      font-weight: 750;
+    }
+
+    @media (max-width: 940px) {
+      .screen {
+        padding-top: 28px;
+      }
+
+      .value-grid,
+      .field-grid,
+      .split-layout,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .value-grid {
+        width: min(100%, 560px);
+        gap: 18px;
+      }
+
+      .option-grid,
+      .option-grid.three,
+      .option-grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel {
+        padding: 22px 20px 22px;
+      }
+
+      .panel[data-step="5"] .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel[data-step="5"] .next-card {
+        grid-column: auto;
+      }
+
+      .progress-step {
+        font-size: 0;
+      }
+    }
+
+    @media (max-width: 620px) {
+      body {
+        background-size: cover, 100% 100%;
+      }
+
+      .wrap {
+        width: min(100% - 28px, var(--max));
+      }
+
+      header {
+        height: 46px;
+        padding: 7px 0 3px;
+      }
+
+      .brand {
+        gap: 8px;
+        font-size: 13px;
+      }
+
+      .brand-mark {
+        width: 24px;
+        height: 24px;
+      }
+
+      .screen {
+        min-height: calc(100svh - 46px);
+        padding: 22px 0 28px;
+      }
+
+      h1 {
+        font-size: clamp(34px, 11vw, 48px);
+      }
+
+      h2 {
+        margin-bottom: 14px;
+        font-size: 28px;
+      }
+
+      .lead {
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+
+      .signal-line,
+      .progress-track {
+        height: 7px;
+        border-width: 2px;
+      }
+
+      .value-card {
+        min-height: auto;
+        padding: 14px;
+      }
+
+      .value-card svg {
+        width: 26px;
+        height: 26px;
+        margin-bottom: 8px;
+      }
+
+      .value-card h3 {
+        font-size: 16px;
+      }
+
+      .value-card p {
+        font-size: 13px;
+      }
+
+      .button {
+        width: 100%;
+        min-width: 0;
+        min-height: 48px;
+        font-size: 15px;
+        box-shadow: 4px 4px 0 #050505;
+      }
+
+      .microcopy {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .progress {
+        gap: 6px;
+      }
+
+      .progress-numbers {
+        gap: 8px;
+      }
+
+      .progress-step span {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+
+      .panel {
+        padding: 16px 12px 16px;
+        box-shadow: 5px 5px 0 #050505;
+      }
+
+      .option-grid,
+      .option-grid.three,
+      .option-grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      input,
+      select {
+        min-height: 44px;
+        font-size: 14px;
+        padding: 9px 10px;
+      }
+
+      .choice span,
+      .check-choice span {
+        min-height: 72px;
+      }
+
+      .slider-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 17px;
+      }
+
+      .summary-list div {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+
+      .summary-list dd {
+        text-align: left;
+      }
+
+      .nav-row {
+        flex-direction: column-reverse;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="wrap">
+      <header aria-label="Page header">
+        <a class="brand" href="#" data-home aria-label="Agentic Engineering">
+          <img class="brand-mark" src="assets/agentic-engineering-mark.png" alt="" aria-hidden="true">
+          <span class="brand-word">Agentic Engineering</span>
+        </a>
+      </header>
+
+      <section class="screen active" data-screen="home">
+        <div class="home">
+          <h1>Fix your AI engineering workflow</h1>
+          <div class="signal-line" aria-hidden="true"></div>
+          <p class="lead">A private 45-60 minute teardown with Prasad Pilla for engineering teams using AI in real development, but still not shipping faster.</p>
+
+          <div class="value-grid" aria-label="Session value">
+            <article class="value-card">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 7h4v4H7V7ZM13 13h4v4h-4v-4ZM7 17v-3a3 3 0 0 1 3-3h4a3 3 0 0 0 3-3V7" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+              </svg>
+              <h3>Real workflow</h3>
+              <p>We map how work moves from ticket to production with AI in the loop.</p>
+            </article>
+
+            <article class="value-card">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4M9 9h6v6H9V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+              </svg>
+              <h3>Context leaks</h3>
+              <p>We find where agents lose state, repeat work, and create review drag.</p>
+            </article>
+
+            <article class="value-card">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM4 21v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2M12 21v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+              </svg>
+              <h3>10 teams only</h3>
+              <p>Prasad runs every selected session personally. No generic consultation.</p>
+            </article>
+          </div>
+
+          <button class="button" type="button" data-start>
+            Request a session
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/>
+            </svg>
+          </button>
+          <p class="microcopy">45-60 minutes | Selective | Prasad runs every session</p>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="wizard" aria-live="polite">
+        <div class="wizard">
+          <div class="progress" aria-label="Application progress">
+            <div class="progress-numbers" id="progress-numbers"></div>
+            <div class="progress-track" aria-hidden="true">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="panel" data-step="0">
+            <h2>Tell us who you are</h2>
+            <div class="field-grid">
+              <div class="field">
+                <label for="fullName">Full name</label>
+                <input id="fullName" name="fullName" autocomplete="name" required placeholder="Your name">
+              </div>
+              <div class="field">
+                <label for="workEmail">Company email</label>
+                <input id="workEmail" name="workEmail" type="email" autocomplete="email" required placeholder="name@company.com">
+              </div>
+              <div class="field full">
+                <label for="website">Company website</label>
+                <input id="website" name="website" autocomplete="url" inputmode="url" required placeholder="yourcompany.com">
+              </div>
+              <div class="field full">
+                <label for="role">Your role</label>
+                <select id="role" name="role" required>
+                  <option value="">Select your role</option>
+                  <option>Founder / CEO</option>
+                  <option>CTO / VP Engineering</option>
+                  <option>Engineering Manager</option>
+                  <option>Staff / Principal Engineer</option>
+                  <option>Product or operations leader</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" data-step="1">
+            <h2>Your engineering shape</h2>
+            <div class="slider-stack">
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="teamSize">Engineering team size</label>
+                  <span class="slider-value" data-value-for="teamSize">25 engineers</span>
+                </div>
+                <input id="teamSize" name="teamSize" type="range" min="1" max="250" value="25" data-unit=" engineers">
+                <div class="range-scale"><span>1</span><span>250+</span></div>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="monthlyTickets">Tickets shipped per month</label>
+                  <span class="slider-value" data-value-for="monthlyTickets">40 tickets</span>
+                </div>
+                <input id="monthlyTickets" name="monthlyTickets" type="range" min="1" max="300" value="40" data-unit=" tickets">
+                <div class="range-scale"><span>1</span><span>300+</span></div>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-head">
+                  <label for="releaseCadence">Release cadence</label>
+                  <span class="slider-value" data-value-for="releaseCadence">Weekly</span>
+                </div>
+                <input id="releaseCadence" name="releaseCadence" type="range" min="1" max="5" value="3" data-labels="Ad hoc,Monthly,Weekly,Daily,Multiple times daily">
+                <div class="range-scale"><span>Ad hoc</span><span>Multiple times daily</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel wide" data-step="2">
+            <h2>How you use AI today</h2>
+            <div class="split-layout">
+              <div class="field">
+                <div class="field-label">Tools you use</div>
+                <div class="option-grid two" data-required-group="tools">
+                  <label class="check-choice">
+                    <input type="checkbox" name="tools" value="Cursor">
+                    <span><b>Cursor</b></span>
+                  </label>
+                  <label class="check-choice">
+                    <input type="checkbox" name="tools" value="Claude Code">
+                    <span><b>Claude Code</b></span>
+                  </label>
+                  <label class="check-choice">
+                    <input type="checkbox" name="tools" value="Codex">
+                    <span><b>Codex</b></span>
+                  </label>
+                  <label class="check-choice">
+                    <input type="checkbox" name="tools" value="GitHub Copilot">
+                    <span><b>GitHub Copilot</b></span>
+                  </label>
+                  <label class="check-choice">
+                    <input type="checkbox" name="tools" value="Devin">
+                    <span><b>Devin</b></span>
+                  </label>
+                  <label class="check-choice">
+                    <input type="checkbox" name="tools" value="Other agents">
+                    <span><b>Other agents</b></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="slider-stack">
+                <div class="slider-row">
+                  <div class="slider-head">
+                    <label for="aiHours">AI hours per engineer per week</label>
+                    <span class="slider-value" data-value-for="aiHours">6 hours</span>
+                  </div>
+                  <input id="aiHours" name="aiHours" type="range" min="0" max="40" value="6" data-unit=" hours">
+                  <div class="range-scale"><span>0</span><span>40+</span></div>
+                </div>
+
+                <div class="slider-row">
+                  <div class="slider-head">
+                    <label for="aiTouched">Engineering work touched by AI</label>
+                    <span class="slider-value" data-value-for="aiTouched">40%</span>
+                  </div>
+                  <input id="aiTouched" name="aiTouched" type="range" min="0" max="100" value="40" data-unit="%">
+                  <div class="range-scale"><span>0%</span><span>100%</span></div>
+                </div>
+
+                <div class="slider-row">
+                  <div class="slider-head">
+                    <label for="parallelAgents">Parallel AI workstreams</label>
+                    <span class="slider-value" data-value-for="parallelAgents">2 at once</span>
+                  </div>
+                  <input id="parallelAgents" name="parallelAgents" type="range" min="0" max="20" value="2" data-unit=" at once">
+                  <div class="range-scale"><span>0</span><span>20+</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel wide" data-step="3">
+            <h2>Where speed leaks today</h2>
+            <div class="field">
+              <div class="field-label">Pick the bottlenecks you feel most often</div>
+              <div class="option-grid three" data-required-group="bottlenecks">
+                <label class="check-choice">
+                  <input type="checkbox" name="bottlenecks" value="Context switching">
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h11M6 16h11M15 4l4 4-4 4M9 12l-4 4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+                    <b>Context switching</b>
+                    <small>Agents and humans keep rebuilding state.</small>
+                  </span>
+                </label>
+                <label class="check-choice">
+                  <input type="checkbox" name="bottlenecks" value="Review burden">
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h16v12H8l-4 3V5ZM8 9h8M8 13h5" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+                    <b>Review burden</b>
+                    <small>Output is faster, but approvals get heavier.</small>
+                  </span>
+                </label>
+                <label class="check-choice">
+                  <input type="checkbox" name="bottlenecks" value="Duplicate work">
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 8h10v10H8V8ZM6 16H4V4h12v2" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+                    <b>Duplicate work</b>
+                    <small>Multiple sessions solve the same problem twice.</small>
+                  </span>
+                </label>
+                <label class="check-choice">
+                  <input type="checkbox" name="bottlenecks" value="Flaky tests">
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3h8M10 3v5l-5 9a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 17l-5-9V3" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+                    <b>Flaky tests</b>
+                    <small>Validation fails late or cannot be trusted.</small>
+                  </span>
+                </label>
+                <label class="check-choice">
+                  <input type="checkbox" name="bottlenecks" value="Unclear ownership">
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7h10v10H7V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+                    <b>Unclear ownership</b>
+                    <small>Nobody knows what humans vs AI should own.</small>
+                  </span>
+                </label>
+                <label class="check-choice">
+                  <input type="checkbox" name="bottlenecks" value="Release drag">
+                  <span>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19h14M7 17l5-12 5 12M9 14h6" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+                    <b>Release drag</b>
+                    <small>Code gets generated faster than it ships.</small>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel wide" data-step="4">
+            <h2>How ready is the system?</h2>
+            <div class="field-grid">
+              <div class="field full">
+                <div class="field-label">How coordinated is your AI engineering setup?</div>
+                <div class="option-grid two" data-required-radio="coordination">
+                  <label class="choice">
+                    <input type="radio" name="coordination" value="Ad hoc" required>
+                    <span><b>Ad hoc</b><small>Everyone does their own thing.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="coordination" value="Some shared rules">
+                    <span><b>Some shared rules</b><small>Tools and rules exist, but not consistently.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="coordination" value="Mostly aligned">
+                    <span><b>Mostly aligned</b><small>Working agreements exist in most areas.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="coordination" value="Well aligned">
+                    <span><b>Well aligned</b><small>Clear standards and regular cadence.</small></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="field full">
+                <div class="field-label">What are you willing to change first?</div>
+                <div class="option-grid three" data-required-radio="changeFirst">
+                  <label class="choice">
+                    <input type="radio" name="changeFirst" value="Context and memory" required>
+                    <span><b>Context and memory</b><small>What agents know before work starts.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="changeFirst" value="Review and QA">
+                    <span><b>Review and QA</b><small>How output becomes release-ready.</small></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="changeFirst" value="Workflow design">
+                    <span><b>Workflow design</b><small>How work is split across people and AI.</small></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel wide" data-step="5">
+            <h2>Review and submit</h2>
+            <div class="summary-grid">
+              <div class="summary-card">
+                <h3>Your details</h3>
+                <dl class="summary-list" id="details-summary"></dl>
+              </div>
+              <div class="summary-card">
+                <h3>AI usage snapshot</h3>
+                <dl class="summary-list" id="usage-summary"></dl>
+              </div>
+              <div class="summary-card">
+                <h3>Workflow snapshot</h3>
+                <dl class="summary-list" id="workflow-summary"></dl>
+                <div class="fit-score" aria-label="Fit signal estimate">
+                  <div class="field-label">Fit signal</div>
+                  <div class="fit-bar"><div class="fit-fill" id="fit-fill"></div></div>
+                </div>
+              </div>
+              <div class="next-card">
+                <h3>What happens next</h3>
+                <p>If your team is a good fit, we will reach out with 2-3 times for a 45-60 minute session with Prasad.</p>
+                <p>If another team is a better fit for this round, we will be direct about that.</p>
+                <strong>Spots are limited to 10 teams.</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="success" id="success">
+            <h2>Request received</h2>
+            <p>Thanks. We will review your answers and reach out if we think your team is a good fit for one of the 10 sessions.</p>
+          </div>
+
+          <div class="error" id="error-message"></div>
+
+          <div class="nav-row" id="nav-row">
+            <button class="button secondary" type="button" data-back>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/>
+              </svg>
+              Back
+            </button>
+            <button class="button" type="button" data-next>
+              <span data-next-label>Next</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const FORM_ENDPOINT = "";
+    const TOTAL_STEPS = 6;
+    let currentStep = 0;
+
+    const homeScreen = document.querySelector('[data-screen="home"]');
+    const wizardScreen = document.querySelector('[data-screen="wizard"]');
+    const panels = Array.from(document.querySelectorAll("[data-step]"));
+    const progressNumbers = document.getElementById("progress-numbers");
+    const progressFill = document.getElementById("progress-fill");
+    const nextButton = document.querySelector("[data-next]");
+    const backButton = document.querySelector("[data-back]");
+    const nextLabel = document.querySelector("[data-next-label]");
+    const errorMessage = document.getElementById("error-message");
+    const navRow = document.getElementById("nav-row");
+    const success = document.getElementById("success");
+
+    const stepNames = ["Details", "Team", "Usage", "Bottlenecks", "Readiness", "Submit"];
+
+    function svgCheck() {
+      return '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/></svg>';
+    }
+
+    function buildProgress() {
+      progressNumbers.innerHTML = stepNames.map((name, index) => `
+        <div class="progress-step" data-progress-step="${index}">
+          <span>${index + 1}</span>
+          ${name}
+        </div>
+      `).join("");
+    }
+
+    function showWizard() {
+      homeScreen.classList.remove("active");
+      wizardScreen.classList.add("active");
+      currentStep = 0;
+      renderStep();
+    }
+
+    function showHome() {
+      wizardScreen.classList.remove("active");
+      homeScreen.classList.add("active");
+      success.classList.remove("show");
+      navRow.style.display = "";
+      window.scrollTo({ top: 0 });
+    }
+
+    function renderStep() {
+      panels.forEach((panel, index) => {
+        panel.style.display = index === currentStep ? "" : "none";
+      });
+
+      document.querySelectorAll("[data-progress-step]").forEach((step, index) => {
+        step.classList.toggle("active", index === currentStep);
+        step.classList.toggle("done", index < currentStep);
+      });
+
+      progressFill.style.width = `${(currentStep / (TOTAL_STEPS - 1)) * 100}%`;
+      backButton.innerHTML = currentStep === 0
+        ? `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/></svg>Back to home`
+        : `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/></svg>Previous`;
+      nextLabel.textContent = currentStep === TOTAL_STEPS - 1 ? "Submit request" : "Next";
+
+      errorMessage.classList.remove("show");
+      updateSummaries();
+      window.scrollTo({ top: 0 });
+    }
+
+    function getCurrentPanel() {
+      return panels[currentStep];
+    }
+
+    function validateStep() {
+      const panel = getCurrentPanel();
+      const requiredFields = Array.from(panel.querySelectorAll("input[required], select[required]"));
+      for (const field of requiredFields) {
+        if (!field.checkValidity()) {
+          field.reportValidity();
+          return false;
+        }
+      }
+
+      const requiredGroups = Array.from(panel.querySelectorAll("[data-required-group]"));
+      for (const group of requiredGroups) {
+        const checked = group.querySelectorAll("input:checked").length;
+        if (!checked) {
+          showError("Pick at least one option before moving on.");
+          return false;
+        }
+      }
+
+      const requiredRadios = Array.from(panel.querySelectorAll("[data-required-radio]"));
+      for (const group of requiredRadios) {
+        const name = group.getAttribute("data-required-radio");
+        const checked = panel.querySelector(`input[name="${name}"]:checked`);
+        if (!checked) {
+          showError("Choose one option before moving on.");
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add("show");
+    }
+
+    function getCheckedValues(name) {
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map((input) => input.value);
+    }
+
+    function getRadioValue(name) {
+      return document.querySelector(`input[name="${name}"]:checked`)?.value || "";
+    }
+
+    function getSliderLabel(id) {
+      const input = document.getElementById(id);
+      const labels = input.dataset.labels ? input.dataset.labels.split(",") : null;
+      if (labels) {
+        return labels[Number(input.value) - Number(input.min)] || input.value;
+      }
+      return `${input.value}${input.dataset.unit || ""}`;
+    }
+
+    function updateRange(input) {
+      const min = Number(input.min);
+      const max = Number(input.max);
+      const value = Number(input.value);
+      const percentage = ((value - min) / (max - min)) * 100;
+      input.style.setProperty("--value", `${percentage}%`);
+
+      const output = document.querySelector(`[data-value-for="${input.id}"]`);
+      if (output) {
+        output.textContent = getSliderLabel(input.id);
+      }
+    }
+
+    function syncChoiceState() {
+      document.querySelectorAll(".choice, .check-choice").forEach((label) => {
+        const input = label.querySelector("input");
+        const span = label.querySelector("span");
+        const isSelected = Boolean(input && input.checked);
+        label.classList.toggle("is-selected", isSelected);
+        if (!span) {
+          return;
+        }
+
+        if (isSelected) {
+          span.style.setProperty("background-color", "#050505", "important");
+          span.style.setProperty("color", "#ffffff", "important");
+          span.style.setProperty("transform", "translate(-2px, -2px)");
+          span.style.setProperty("box-shadow", "5px 5px 0 #050505");
+        } else {
+          span.style.removeProperty("background-color");
+          span.style.removeProperty("color");
+          span.style.removeProperty("transform");
+          span.style.removeProperty("box-shadow");
+        }
+      });
+    }
+
+    function summaryRows(rows) {
+      return rows.map(([label, value]) => `
+        <div>
+          <dt>${label}</dt>
+          <dd>${value || "Not answered"}</dd>
+        </div>
+      `).join("");
+    }
+
+    function collectPayload() {
+      return {
+        fullName: document.getElementById("fullName").value.trim(),
+        workEmail: document.getElementById("workEmail").value.trim(),
+        website: document.getElementById("website").value.trim(),
+        role: document.getElementById("role").value,
+        teamSize: getSliderLabel("teamSize"),
+        monthlyTickets: getSliderLabel("monthlyTickets"),
+        releaseCadence: getSliderLabel("releaseCadence"),
+        tools: getCheckedValues("tools"),
+        aiHours: getSliderLabel("aiHours"),
+        aiTouched: getSliderLabel("aiTouched"),
+        parallelAgents: getSliderLabel("parallelAgents"),
+        bottlenecks: getCheckedValues("bottlenecks"),
+        coordination: getRadioValue("coordination"),
+        changeFirst: getRadioValue("changeFirst")
+      };
+    }
+
+    function updateSummaries() {
+      const payload = collectPayload();
+      document.getElementById("details-summary").innerHTML = summaryRows([
+        ["Name", payload.fullName],
+        ["Email", payload.workEmail],
+        ["Website", payload.website],
+        ["Role", payload.role]
+      ]);
+      document.getElementById("usage-summary").innerHTML = summaryRows([
+        ["Team size", payload.teamSize],
+        ["Tickets/month", payload.monthlyTickets],
+        ["Release cadence", payload.releaseCadence],
+        ["AI hours", payload.aiHours],
+        ["Work touched", payload.aiTouched],
+        ["Parallel AI", payload.parallelAgents],
+        ["Tools", payload.tools.join(", ")]
+      ]);
+      document.getElementById("workflow-summary").innerHTML = summaryRows([
+        ["Bottlenecks", payload.bottlenecks.join(", ")],
+        ["Coordination", payload.coordination],
+        ["First change", payload.changeFirst]
+      ]);
+
+      const score = calculateFitScore(payload);
+      document.getElementById("fit-fill").style.width = `${score}%`;
+    }
+
+    function calculateFitScore(payload) {
+      let score = 30;
+      const aiTouched = Number(document.getElementById("aiTouched").value);
+      const aiHours = Number(document.getElementById("aiHours").value);
+      const parallelAgents = Number(document.getElementById("parallelAgents").value);
+      const teamSize = Number(document.getElementById("teamSize").value);
+
+      if (teamSize >= 6) score += 10;
+      if (teamSize >= 16) score += 10;
+      if (aiTouched >= 25) score += 15;
+      if (aiHours >= 4) score += 10;
+      if (parallelAgents >= 2) score += 10;
+      if (payload.tools.length >= 2) score += 10;
+      if (payload.bottlenecks.length >= 2) score += 10;
+      if (payload.coordination === "Ad hoc" || payload.coordination === "Some shared rules") score += 8;
+
+      return Math.min(score, 96);
+    }
+
+    async function submitRequest() {
+      const payload = collectPayload();
+      const body = {
+        submittedAt: new Date().toISOString(),
+        source: "AI Engineering Workflow Teardown",
+        payload
+      };
+
+      localStorage.setItem("workflowTeardownRequest", JSON.stringify(body));
+
+      if (FORM_ENDPOINT) {
+        await fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+      }
+
+      panels.forEach((panel) => panel.style.display = "none");
+      navRow.style.display = "none";
+      errorMessage.classList.remove("show");
+      success.classList.add("show");
+      progressFill.style.width = "100%";
+      document.querySelectorAll("[data-progress-step]").forEach((step) => step.classList.add("done"));
+      window.scrollTo({ top: 0 });
+    }
+
+    buildProgress();
+    document.querySelector("[data-start]").addEventListener("click", showWizard);
+    document.querySelector("[data-home]").addEventListener("click", (event) => {
+      event.preventDefault();
+      showHome();
+    });
+
+    backButton.addEventListener("click", () => {
+      if (currentStep === 0) {
+        showHome();
+        return;
+      }
+      currentStep -= 1;
+      renderStep();
+    });
+
+    nextButton.addEventListener("click", async () => {
+      if (!validateStep()) {
+        return;
+      }
+
+      if (currentStep === TOTAL_STEPS - 1) {
+        try {
+          await submitRequest();
+        } catch (error) {
+          showError("Something went wrong while submitting. Please try again.");
+        }
+        return;
+      }
+
+      currentStep += 1;
+      renderStep();
+    });
+
+    document.querySelectorAll('input[type="range"]').forEach((input) => {
+      updateRange(input);
+      input.addEventListener("input", () => updateRange(input));
+    });
+
+    document.querySelectorAll("input, select").forEach((input) => {
+      input.addEventListener("change", () => {
+        syncChoiceState();
+        updateSummaries();
+      });
+      input.addEventListener("input", updateSummaries);
+    });
+
+    syncChoiceState();
+    renderStep();
+  </script>
+</body>
+</html>
