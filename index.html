@@ -1391,7 +1391,7 @@
   </main>
 
   <script>
-    const FORM_ENDPOINT = "";
+    const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbzKJB8RuTO9XlNUzupt9ncsl8s-31RBroI4Aq9JGeMlad9MNed2-L-MUGolKUu0221K/exec";
     const TOTAL_STEPS = 6;
     let currentStep = 0;
 
@@ -1640,7 +1640,8 @@
       if (FORM_ENDPOINT) {
         await fetch(FORM_ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(body)
         });
       }
